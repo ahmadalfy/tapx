@@ -3,13 +3,14 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import styles from './styles.module.css'
 
 function EditorInner(): ReactNode {
-  const { useState } = require('react')
+  const { useState, useReducer } = require('react')
   const { html: beautify } = require('js-beautify')
   const { useEditor, EditorContent } = require('@tiptap/react')
   const StarterKit = require('@tiptap/starter-kit').default
-  const { Column, Columns2, Columns3, ColumnsCommands } = require('@tapx/columns')
+  const { Column, Columns2, Columns3, ColumnsCommands, readColumnsState, flexesMatch } = require('@tapx/columns')
 
   const [showHtml, setShowHtml] = useState(false)
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0)
 
   const editor = useEditor({
     extensions: [StarterKit, Column, Columns2, Columns3, ColumnsCommands],
@@ -21,11 +22,13 @@ function EditorInner(): ReactNode {
       </div>
       <p></p>
     `,
+    onTransaction: () => forceUpdate(),
   })
 
   if (!editor) return null
 
   const inColumns = editor.isActive('columns2') || editor.isActive('columns3')
+  const cols = inColumns ? readColumnsState(editor) : null
 
   return (
     <div className={styles.playground}>
@@ -34,7 +37,7 @@ function EditorInner(): ReactNode {
           <span className={styles.label}>{inColumns ? 'Columns' : 'Insert'}</span>
           <button
             type="button"
-            className={styles.btn}
+            className={`${styles.btn} ${cols?.count === 2 ? styles.btnActive : ''}`}
             onClick={() => inColumns
               ? editor.chain().focus().setColumnCount(2).run()
               : editor.chain().focus().insertColumns(2).run()
@@ -44,7 +47,7 @@ function EditorInner(): ReactNode {
           </button>
           <button
             type="button"
-            className={styles.btn}
+            className={`${styles.btn} ${cols?.count === 3 ? styles.btnActive : ''}`}
             onClick={() => inColumns
               ? editor.chain().focus().setColumnCount(3).run()
               : editor.chain().focus().insertColumns(3).run()
@@ -66,7 +69,7 @@ function EditorInner(): ReactNode {
                     <button
                       key={flexes.join('+')}
                       type="button"
-                      className={`${styles.btn} ${editor.isActive('columns2') ? '' : ''}`}
+                      className={`${styles.btn} ${cols && flexesMatch(cols.flexValues, flexes) ? styles.btnActive : ''}`}
                       onClick={() => editor.chain().focus().setColumnsLayout(flexes).run()}
                       title={flexes.map(f => `${f}`).join('/')}
                     >
@@ -80,7 +83,7 @@ function EditorInner(): ReactNode {
                     <button
                       key={flexes.join('+')}
                       type="button"
-                      className={styles.btn}
+                      className={`${styles.btn} ${cols && flexesMatch(cols.flexValues, flexes) ? styles.btnActive : ''}`}
                       onClick={() => editor.chain().focus().setColumnsLayout(flexes).run()}
                       title={flexes.map(f => `${f}`).join('/')}
                     >
@@ -99,7 +102,7 @@ function EditorInner(): ReactNode {
                 <button
                   key={g}
                   type="button"
-                  className={styles.btn}
+                  className={`${styles.btn} ${cols?.gap === g ? styles.btnActive : ''}`}
                   title={g.charAt(0).toUpperCase() + g.slice(1)}
                   onClick={() => editor.chain().focus().setColumnsGap(g).run()}
                 >
@@ -114,7 +117,7 @@ function EditorInner(): ReactNode {
               <span className={styles.label}>Mobile</span>
               <button
                 type="button"
-                className={styles.btn}
+                className={`${styles.btn} ${cols?.mobileStack ? styles.btnActive : ''}`}
                 onClick={() => editor.chain().focus().setColumnsMobileStack(true).run()}
                 title="Stack on mobile"
               >
@@ -122,7 +125,7 @@ function EditorInner(): ReactNode {
               </button>
               <button
                 type="button"
-                className={styles.btn}
+                className={`${styles.btn} ${cols && !cols.mobileStack ? styles.btnActive : ''}`}
                 onClick={() => editor.chain().focus().setColumnsMobileStack(false).run()}
                 title="Side by side on mobile"
               >

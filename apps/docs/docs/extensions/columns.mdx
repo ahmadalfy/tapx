@@ -260,6 +260,15 @@ Gap and column count buttons work well as text labels (`T` / `N` / `W` and `2` /
 Without <code>onTransaction: () => forceUpdate()</code>, the toolbar computes <code>isColumnsActive</code> once on mount and never updates — so the columns controls will never appear when the cursor moves into a column block. <code>onTransaction</code> fires on every editor state change and triggers a re-render with the current selection state.
 </Admonition>
 
+All buttons in the example already set `aria-pressed` — a single CSS rule covers the active state for column count, layout presets, gap, and mobile stacking at once:
+
+```css
+.toolbar button[aria-pressed="true"] {
+  background: #5468d4;
+  color: #fff;
+}
+```
+
 ## Bubble toolbar
 
 For a better editing experience, a floating bubble that appears directly over the active columns block is the recommended approach in production.

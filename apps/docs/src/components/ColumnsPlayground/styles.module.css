@@ -67,6 +67,17 @@
   border-color: var(--ifm-color-emphasis-400);
 }
 
+.btnActive {
+  background: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+  color: #fff;
+}
+
+.btnActive:hover {
+  background: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+}
+
 .layoutIcon {
   display: inline-flex;
   gap: 2px;
