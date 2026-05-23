@@ -43,8 +43,7 @@ export default function Home(): ReactNode {
           <Heading as="h1" className={styles.heroTitle}>tapx</Heading>
           <p className={styles.heroTagline}>Free, open-source extensions for TipTap</p>
           <p className={styles.heroDescription}>
-            Production-quality extensions that TipTap doesn't ship out of the box.
-            No paywalls. No subscriptions. Install via npm or copy the source.
+            Production-quality extensions for editorial workflows.
           </p>
           <div className={styles.heroCtas}>
             <Link className="button button--primary button--lg" to="/docs/extensions/columns">
