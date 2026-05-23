@@ -75,7 +75,7 @@ export default function Home(): ReactNode {
               <ExtensionCard
                 name="Image"
                 pkg="@tapx/image"
-                description="Advanced image upload with cropping, drag-and-drop, progress tracking, and media library integration."
+                description="Upload, crop, and insert images with responsive AVIF/WebP variants at the correct sizes."
                 status="coming-soon"
               />
             </div>

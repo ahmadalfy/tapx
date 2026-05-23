@@ -1,5 +1,14 @@
 export { Column, Columns2, Columns3, ColumnsCommands } from './columns'
-export type { ColumnsGap } from './types'
+export type { ColumnsGap, ColumnsState, ColumnLayoutPreset } from './types'
+export {
+  isColumnsActive,
+  getColumnsDomNode,
+  readColumnsState,
+  flexesMatch,
+  getColumnPresets,
+  TWO_COL_PRESETS,
+  THREE_COL_PRESETS,
+} from './utils'
 
 export { Column as default } from './columns'
 

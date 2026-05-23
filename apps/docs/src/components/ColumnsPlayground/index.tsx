@@ -31,18 +31,24 @@ function EditorInner(): ReactNode {
     <div className={styles.playground}>
       <div className={styles.toolbar}>
         <div className={styles.group}>
-          <span className={styles.label}>Insert</span>
+          <span className={styles.label}>{inColumns ? 'Columns' : 'Insert'}</span>
           <button
             type="button"
             className={styles.btn}
-            onClick={() => editor.chain().focus().insertColumns(2).run()}
+            onClick={() => inColumns
+              ? editor.chain().focus().setColumnCount(2).run()
+              : editor.chain().focus().insertColumns(2).run()
+            }
           >
             2 columns
           </button>
           <button
             type="button"
             className={styles.btn}
-            onClick={() => editor.chain().focus().insertColumns(3).run()}
+            onClick={() => inColumns
+              ? editor.chain().focus().setColumnCount(3).run()
+              : editor.chain().focus().insertColumns(3).run()
+            }
           >
             3 columns
           </button>
@@ -94,6 +100,7 @@ function EditorInner(): ReactNode {
                   key={g}
                   type="button"
                   className={styles.btn}
+                  title={g.charAt(0).toUpperCase() + g.slice(1)}
                   onClick={() => editor.chain().focus().setColumnsGap(g).run()}
                 >
                   {g[0].toUpperCase()}
@@ -143,7 +150,7 @@ function EditorInner(): ReactNode {
             const CodeBlock = require('@theme/CodeBlock').default
             return (
               <CodeBlock language="html">
-                {beautify(editor.getHTML(), { indent_size: 2, wrap_line_length: 0 })}
+                {beautify(editor.getHTML(), { indent_size: 2, wrap_line_length: 0 }).replace(/=""/g, '')}
               </CodeBlock>
             )
           })()}
