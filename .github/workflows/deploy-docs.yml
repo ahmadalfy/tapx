@@ -40,7 +40,7 @@ jobs:
         run: pnpm --filter @tapx/columns build
 
       - name: Build docs
-        run: pnpm --filter docs build
+        run: pnpm --filter apps-docs build
 
       - uses: actions/upload-pages-artifact@v3
         with:
