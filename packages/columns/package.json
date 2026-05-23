@@ -4,7 +4,7 @@
   "description": "Multi-column layout extension for TipTap",
   "keywords": ["tiptap", "tiptap-extension", "prosemirror", "columns", "grid", "layout", "wysiwyg"],
   "license": "MIT",
-  "homepage": "https://tapx.dev/extensions/columns",
+  "homepage": "https://tapx.alfy.blog/docs/extensions/columns",
   "repository": {
     "type": "git",
     "url": "https://github.com/ahmadalfy/tapx",
