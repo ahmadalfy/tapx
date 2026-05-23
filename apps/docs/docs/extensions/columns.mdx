@@ -27,6 +27,10 @@ pnpm add @tapx/columns
 
 ## Usage
 
+<Admonition type="info" title="UI not included">
+Registering the extensions doesn't add any visible controls to your editor. You need to wire up UI to let users insert and manage columns. See the <a href="#static-toolbar">Static toolbar</a> section for a ready-made component to copy, or the <a href="#bubble-toolbar">Bubble toolbar</a> section for a floating alternative.
+</Admonition>
+
 ```ts
 import { Editor } from '@tiptap/core'
 import StarterKit from '@tiptap/starter-kit'
@@ -118,9 +122,147 @@ const editor = new Editor({
 
 `columnsKit` can't be used here because it includes the default `Column` — using both would register two conflicting node types. When extending `Column`, list the four extensions individually as shown above.
 
+## Static toolbar
+
+`@tapx/columns` ships editor logic only — the UI is yours to build. The simplest starting point is a static toolbar rendered above the editor. Copy this component into your project and style it to match your design system.
+
+<Admonition type="tip" title="Icons">
+For layout presets and mobile stacking, the demo above uses small CSS spans. No icon library needed.
+</Admonition>
+
+```tsx
+import { useReducer } from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import {
+  columnsKit,
+  isColumnsActive,
+  readColumnsState,
+  flexesMatch,
+  getColumnPresets,
+} from '@tapx/columns'
+
+export function Editor() {
+  const [, forceUpdate] = useReducer((x: number) => x + 1, 0)
+
+  const editor = useEditor({
+    extensions: [StarterKit, ...columnsKit],
+    content: '<p>Start typing…</p>',
+    onTransaction: () => forceUpdate(),
+  })
+
+  if (!editor) return null
+
+  const inColumns = isColumnsActive(editor)
+  const cols = inColumns ? readColumnsState(editor) : null
+  const presets = cols ? getColumnPresets(cols.count) : []
+
+  return (
+    <div>
+      <div className="toolbar">
+        {/* Insert / switch column count */}
+        <button
+          onClick={() => inColumns
+            ? editor.chain().focus().setColumnCount(2).run()
+            : editor.chain().focus().insertColumns(2).run()}
+        >
+          2 columns
+        </button>
+        <button
+          onClick={() => inColumns
+            ? editor.chain().focus().setColumnCount(3).run()
+            : editor.chain().focus().insertColumns(3).run()}
+        >
+          3 columns
+        </button>
+
+        {inColumns && cols && (
+          <>
+            {/* Layout presets */}
+            {presets.map((preset) => (
+              <button
+                key={preset.label}
+                aria-pressed={flexesMatch(cols.flexValues, preset.flexes)}
+                onClick={() => editor.chain().focus().setColumnsLayout(preset.flexes).run()}
+              >
+                {preset.label}
+              </button>
+            ))}
+
+            {/* Gap */}
+            {(['tight', 'normal', 'wide'] as const).map((g) => (
+              <button
+                key={g}
+                aria-pressed={cols.gap === g}
+                onClick={() => editor.chain().focus().setColumnsGap(g).run()}
+              >
+                {g}
+              </button>
+            ))}
+
+            {/* Mobile stacking */}
+            <button
+              aria-pressed={cols.mobileStack}
+              onClick={() => editor.chain().focus().setColumnsMobileStack(true).run()}
+            >
+              Stack on mobile
+            </button>
+            <button
+              aria-pressed={!cols.mobileStack}
+              onClick={() => editor.chain().focus().setColumnsMobileStack(false).run()}
+            >
+              Side by side
+            </button>
+          </>
+        )}
+      </div>
+
+      <EditorContent editor={editor} />
+    </div>
+  )
+}
+```
+
+Here are the icon patterns used in the demo above:
+
+```tsx
+{/* Layout preset — proportional bars reflecting the actual flex ratio */}
+{presets.map((preset) => (
+  <button key={preset.label} onClick={() => editor.chain().focus().setColumnsLayout(preset.flexes).run()}>
+    <span style={{ display: 'inline-flex', gap: 2, width: 26, height: 12 }}>
+      {preset.flexes.map((f, i) => (
+        <span key={i} style={{ display: 'block', flex: f, height: '100%', background: 'currentColor', borderRadius: 1 }} />
+      ))}
+    </span>
+  </button>
+))}
+
+{/* Mobile stacking — two stacked bars */}
+<button onClick={() => editor.chain().focus().setColumnsMobileStack(true).run()}>
+  <span style={{ display: 'inline-flex', flexDirection: 'column', gap: 2, width: 18, height: 14 }}>
+    <span style={{ display: 'block', width: '100%', height: 5, background: 'currentColor', borderRadius: 1 }} />
+    <span style={{ display: 'block', width: '100%', height: 5, background: 'currentColor', borderRadius: 1 }} />
+  </span>
+</button>
+
+{/* Mobile side by side — two vertical bars */}
+<button onClick={() => editor.chain().focus().setColumnsMobileStack(false).run()}>
+  <span style={{ display: 'inline-flex', flexDirection: 'row', gap: 2, width: 18, height: 14 }}>
+    <span style={{ display: 'block', width: 6, height: 12, background: 'currentColor', borderRadius: 1 }} />
+    <span style={{ display: 'block', width: 6, height: 12, background: 'currentColor', borderRadius: 1 }} />
+  </span>
+</button>
+```
+
+Gap and column count buttons work well as text labels (`T` / `N` / `W` and `2` / `3`).
+
+<Admonition type="warning" title="onTransaction is required">
+Without <code>onTransaction: () => forceUpdate()</code>, the toolbar computes <code>isColumnsActive</code> once on mount and never updates — so the columns controls will never appear when the cursor moves into a column block. <code>onTransaction</code> fires on every editor state change and triggers a re-render with the current selection state.
+</Admonition>
+
 ## Bubble toolbar
 
-`@tapx/columns` ships the editor logic only — the UI is yours to build. The playground above uses a static toolbar for simplicity, but in a real editor a floating bubble that appears directly over the active columns block gives a much better experience.
+For a better editing experience, a floating bubble that appears directly over the active columns block is the recommended approach in production.
 
 <ColumnsBubblePlayground />
 
