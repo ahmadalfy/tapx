@@ -12,7 +12,7 @@ import type { ColumnsGap } from './types'
 export const Column = Node.create({
   name: 'column',
   group: 'column',
-  content: '(paragraph | heading | bulletList | orderedList | blockquote | horizontalRule | image)+',
+  content: '(paragraph | heading | bulletList | orderedList | blockquote | horizontalRule)+',
   defining: true,
   isolating: true,
 

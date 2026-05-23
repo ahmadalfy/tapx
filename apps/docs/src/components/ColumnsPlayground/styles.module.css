@@ -1,0 +1,172 @@
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--ifm-color-emphasis-500);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+}
+
+.playground {
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.5rem 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  background: var(--ifm-color-emphasis-100);
+  min-height: 44px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--ifm-color-emphasis-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 0.125rem;
+}
+
+.divider {
+  display: block;
+  width: 1px;
+  height: 1.25rem;
+  background: var(--ifm-color-emphasis-300);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 5px;
+  background: var(--ifm-background-color);
+  cursor: pointer;
+  font-size: 0.8rem;
+  color: var(--ifm-font-color-base);
+  transition: background 0.1s, border-color 0.1s;
+  min-height: 28px;
+  font-family: inherit;
+}
+
+.btn:hover {
+  background: var(--ifm-color-emphasis-200);
+  border-color: var(--ifm-color-emphasis-400);
+}
+
+.layoutIcon {
+  display: inline-flex;
+  gap: 2px;
+  width: 26px;
+  height: 12px;
+}
+
+.layoutBar {
+  display: block;
+  height: 100%;
+  background: currentColor;
+  opacity: 0.7;
+  border-radius: 1px;
+}
+
+/* Editor area */
+.editorWrapper {
+  padding: 1rem 1.25rem;
+  min-height: 180px;
+}
+
+.editorWrapper :global(.ProseMirror) {
+  outline: none;
+  min-height: 120px;
+}
+
+.editorWrapper :global(.ProseMirror p.is-editor-empty:first-child::before) {
+  color: var(--ifm-color-emphasis-400);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Column layout styles */
+.editorWrapper :global([data-cols]) {
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0;
+}
+
+.editorWrapper :global([data-cols][data-col-gap='tight']) {
+  gap: 0.5rem;
+}
+
+.editorWrapper :global([data-cols][data-col-gap='wide']) {
+  gap: 2rem;
+}
+
+.editorWrapper :global([data-col]) {
+  flex: 1;
+  min-width: 0;
+  border: 2px dashed var(--ifm-color-emphasis-300);
+  border-radius: 5px;
+  padding: 0.5rem 0.625rem;
+  transition: border-color 0.15s;
+}
+
+.editorWrapper :global([data-col]:focus-within) {
+  border-color: var(--ifm-color-primary);
+}
+
+.editorWrapper :global([data-col][data-col-flex='2']) {
+  flex: 2;
+}
+
+.editorWrapper :global([data-col][data-col-flex='3']) {
+  flex: 3;
+}
+
+.editorWrapper :global([data-col] > *:last-child) {
+  margin-bottom: 0;
+}
+
+/* HTML output */
+.htmlToggle {
+  display: block;
+  width: 100%;
+  padding: 0.4rem 1rem;
+  background: var(--ifm-color-emphasis-100);
+  border: none;
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+  font-family: inherit;
+}
+
+.htmlToggle:hover {
+  background: var(--ifm-color-emphasis-200);
+}
+
+.htmlOutput {
+  margin: 0;
+  padding: 0.875rem 1.25rem;
+  background: var(--ifm-color-emphasis-100);
+  border-top: 1px solid var(--ifm-color-emphasis-300);
+  font-size: 0.8rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

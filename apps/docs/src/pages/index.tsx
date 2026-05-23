@@ -1,44 +1,87 @@
-import type {ReactNode} from 'react';
-import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-import Heading from '@theme/Heading';
+import type { ReactNode } from 'react'
+import Link from '@docusaurus/Link'
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
+import Layout from '@theme/Layout'
+import Heading from '@theme/Heading'
+import styles from './index.module.css'
 
-import styles from './index.module.css';
+type ExtensionCardProps = {
+  name: string
+  pkg: string
+  description: string
+  status: 'available' | 'coming-soon'
+  href?: string
+}
 
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
-  return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <Heading as="h1" className="hero__title">
-          {siteConfig.title}
-        </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
-        </div>
+function ExtensionCard({ name, pkg, description, status, href }: ExtensionCardProps) {
+  const inner = (
+    <div className={`${styles.card} ${status === 'coming-soon' ? styles.cardMuted : ''}`}>
+      <div className={styles.cardHeader}>
+        <Heading as="h3" className={styles.cardName}>{name}</Heading>
+        {status === 'available' ? (
+          <span className={styles.badgeAvailable}>available</span>
+        ) : (
+          <span className={styles.badgeSoon}>coming soon</span>
+        )}
       </div>
-    </header>
-  );
+      <code className={styles.cardPkg}>{pkg}</code>
+      <p className={styles.cardDescription}>{description}</p>
+    </div>
+  )
+
+  if (href) return <Link to={href} className={styles.cardLink}>{inner}</Link>
+  return <div className={styles.cardLink}>{inner}</div>
 }
 
 export default function Home(): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext()
+
   return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
+    <Layout title={siteConfig.title} description={siteConfig.tagline}>
+      <header className={styles.hero}>
+        <div className="container">
+          <Heading as="h1" className={styles.heroTitle}>tapx</Heading>
+          <p className={styles.heroTagline}>Free, open-source extensions for TipTap</p>
+          <p className={styles.heroDescription}>
+            Production-quality extensions that TipTap doesn't ship out of the box.
+            No paywalls. No subscriptions. Install via npm or copy the source.
+          </p>
+          <div className={styles.heroCtas}>
+            <Link className="button button--primary button--lg" to="/docs/extensions/columns">
+              Browse Extensions
+            </Link>
+            <Link
+              className="button button--secondary button--lg"
+              href="https://github.com/ahmadalfy/tapx"
+            >
+              GitHub
+            </Link>
+          </div>
+        </div>
+      </header>
+
       <main>
-        <HomepageFeatures />
+        <section className={styles.extensions}>
+          <div className="container">
+            <Heading as="h2" className={styles.sectionTitle}>Extensions</Heading>
+            <div className={styles.grid}>
+              <ExtensionCard
+                name="Columns"
+                pkg="@tapx/columns"
+                description="Multi-column layouts with configurable widths, gap, and mobile stacking behaviour. Supports 2 and 3 columns."
+                status="available"
+                href="/docs/extensions/columns"
+              />
+              <ExtensionCard
+                name="Image"
+                pkg="@tapx/image"
+                description="Advanced image upload with cropping, drag-and-drop, progress tracking, and media library integration."
+                status="coming-soon"
+              />
+            </div>
+          </div>
+        </section>
       </main>
     </Layout>
-  );
+  )
 }
