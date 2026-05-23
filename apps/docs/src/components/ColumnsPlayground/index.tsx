@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 
 function EditorInner(): ReactNode {
   const { useState } = require('react')
+  const { html: beautify } = require('js-beautify')
   const { useEditor, EditorContent } = require('@tiptap/react')
   const StarterKit = require('@tiptap/starter-kit').default
   const { Column, Columns2, Columns3, ColumnsCommands } = require('@tapx/columns')
@@ -137,9 +138,16 @@ function EditorInner(): ReactNode {
         {showHtml ? '▾' : '▸'} HTML output
       </button>
       {showHtml && (
-        <pre className={styles.htmlOutput}>
-          <code>{editor.getHTML()}</code>
-        </pre>
+        <div className={styles.htmlOutput}>
+          {(() => {
+            const CodeBlock = require('@theme/CodeBlock').default
+            return (
+              <CodeBlock language="html">
+                {beautify(editor.getHTML(), { indent_size: 2, wrap_line_length: 0 })}
+              </CodeBlock>
+            )
+          })()}
+        </div>
       )}
     </div>
   )
