@@ -1,0 +1,46 @@
+{
+  "name": "@tapx/columns",
+  "version": "0.1.0",
+  "description": "Multi-column layout extension for TipTap",
+  "keywords": ["tiptap", "tiptap-extension", "prosemirror", "columns", "grid", "layout", "wysiwyg"],
+  "license": "MIT",
+  "homepage": "https://tapx.dev/extensions/columns",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ahmadalfy/tapx",
+    "directory": "packages/columns"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@tiptap/core": ">=2.0.0",
+    "@tiptap/pm": ">=2.0.0"
+  },
+  "devDependencies": {
+    "@tiptap/core": "^2.11.0",
+    "@tiptap/extension-document": "^2.11.0",
+    "@tiptap/extension-paragraph": "^2.11.0",
+    "@tiptap/extension-text": "^2.11.0",
+    "@tiptap/pm": "^2.11.0",
+    "happy-dom": "^17.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.0.0"
+  }
+}
